@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import StatsCards from './components/StatsCards';
 import RevenueChart from './components/RevenueChart';
+import OrdersTable from './components/OrdersTable';
 
 export default function App() {
   const [dashboardData, setDashboardData] = useState({ stats: null, chartData: [] });
@@ -39,6 +40,7 @@ export default function App() {
             <>
               <StatsCards stats={dashboardData.stats} />
               <RevenueChart data={dashboardData.chartData} />
+              <OrdersTable />
             </>
           )}
         </main>
