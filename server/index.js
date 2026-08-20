@@ -113,5 +113,32 @@ app.put('/api/orders/:id', (req, res) => {
   res.json(db.orders[orderIndex]);
 });
 
+// Mock Notifications Data
+let notifications = [
+  { id: 1, title: 'New High-Value Order', message: 'Order ORD-1042 placed for $450.00', time: '5m ago', read: false, type: 'order' },
+  { id: 2, title: 'Low Inventory Alert', message: 'Product "Wireless Mouse" is below threshold (2 items left)', time: '1h ago', read: false, type: 'warning' },
+  { id: 3, title: 'Refund Requested', message: 'Customer requested refund for ORD-1012', time: '3h ago', read: true, type: 'alert' },
+];
+
+// GET: Fetch all notifications
+app.get('/api/notifications', (req, res) => {
+  res.json(notifications);
+});
+
+// PATCH: Mark single notification as read
+app.patch('/api/notifications/:id/read', (req, res) => {
+  const { id } = req.params;
+  notifications = notifications.map((n) =>
+    n.id === parseInt(id) ? { ...n, read: true } : n
+  );
+  res.json({ success: true });
+});
+
+// PATCH: Mark all as read
+app.patch('/api/notifications/read-all', (req, res) => {
+  notifications = notifications.map((n) => ({ ...n, read: true }));
+  res.json({ success: true });
+});
+
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

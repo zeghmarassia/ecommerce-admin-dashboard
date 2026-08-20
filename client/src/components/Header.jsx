@@ -1,5 +1,6 @@
 import React from 'react';
-import { Bell, Search, User } from 'lucide-react';
+import { Search, User } from 'lucide-react';
+import NotificationsPopover from './NotificationsPopover';
 
 export default function Header() {
   return (
@@ -14,10 +15,9 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="relative p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100">
-          <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-600 rounded-full"></span>
-        </button>
+        {/* Dynamic Notifications Component */}
+        <NotificationsPopover />
+
         <div className="h-8 w-px bg-slate-200"></div>
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-semibold">
