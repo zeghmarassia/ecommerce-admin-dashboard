@@ -1,31 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import api from "./api";
 
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import StatsCards from './components/StatsCards';
-import RevenueChart from './components/RevenueChart';
-import OrdersTable from './components/OrdersTable';
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import StatsCards from "./components/StatsCards";
+import RevenueChart from "./components/RevenueChart";
+import OrdersTable from "./components/OrdersTable";
 
-import Customers from './pages/Customers';
-import Analytics from './pages/Analytics';
-import Settings from './pages/Settings';
+import Customers from "./pages/Customers";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
 
 // Overview Dashboard View Component
 function OverviewView() {
-  const [dashboardData, setDashboardData] = useState({ stats: null, chartData: [] });
+  const [dashboardData, setDashboardData] = useState({
+    stats: null,
+    chartData: [],
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/dashboard/stats')
+    api.get("/api/dashboard/stats")
       .then((res) => {
         setDashboardData(res.data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Error fetching dashboard stats:', err);
+        console.error("Error fetching dashboard stats:", err);
         setLoading(false);
       });
   }, []);
@@ -34,11 +36,15 @@ function OverviewView() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold mb-1">Dashboard Overview</h1>
-        <p className="text-slate-500 text-sm">Welcome back! Here's what's happening today.</p>
+        <p className="text-slate-500 text-sm">
+          Welcome back! Here's what's happening today.
+        </p>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-slate-400">Loading analytics...</div>
+        <div className="p-12 text-center text-slate-400">
+          Loading analytics...
+        </div>
       ) : (
         <>
           <StatsCards stats={dashboardData.stats} />

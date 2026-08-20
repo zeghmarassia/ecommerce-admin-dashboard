@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Search, ChevronLeft, ChevronRight, Filter, Plus } from 'lucide-react';
-import CreateOrderModal from './CreateOrderModal';
+import React, { useState, useEffect } from "react";
+import api from "../api";
+import { Search, ChevronLeft, ChevronRight, Filter, Plus } from "lucide-react";
+import CreateOrderModal from "./CreateOrderModal";
 
 export default function OrdersTable() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('');
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalOrders, setTotalOrders] = useState(0);
 
   const fetchOrders = () => {
     setLoading(true);
-    axios
-      .get('http://localhost:5000/api/orders', { params: { page, limit: 6, search, status } })
+    api.get("/api/orders", { params: { page, limit: 6, search, status } })
       .then((res) => {
         setOrders(res.data.data);
         setTotalPages(res.data.pagination.totalPages);
@@ -25,7 +24,7 @@ export default function OrdersTable() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Error fetching orders:', err);
+        console.error("Error fetching orders:", err);
         setLoading(false);
       });
   };
@@ -35,10 +34,9 @@ export default function OrdersTable() {
   }, [page, search, status]);
 
   const handleStatusChange = (orderId, newStatus) => {
-    axios
-      .put(`http://localhost:5000/api/orders/${orderId}`, { status: newStatus })
+    api.put(`/api/orders/${orderId}`, { status: newStatus })
       .then(() => fetchOrders())
-      .catch((err) => console.error('Error updating order:', err));
+      .catch((err) => console.error("Error updating order:", err));
   };
 
   return (
@@ -53,7 +51,10 @@ export default function OrdersTable() {
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              size={16}
+            />
             <input
               type="text"
               placeholder="Search ID or Customer..."
@@ -108,26 +109,41 @@ export default function OrdersTable() {
           <tbody className="divide-y divide-slate-100">
             {loading ? (
               <tr>
-                <td colSpan="6" className="py-8 text-center text-slate-400">Loading orders...</td>
+                <td colSpan="6" className="py-8 text-center text-slate-400">
+                  Loading orders...
+                </td>
               </tr>
             ) : orders.length === 0 ? (
               <tr>
-                <td colSpan="6" className="py-8 text-center text-slate-400">No orders found.</td>
+                <td colSpan="6" className="py-8 text-center text-slate-400">
+                  No orders found.
+                </td>
               </tr>
             ) : (
               orders.map((order) => (
-                <tr key={order.id} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="py-4 px-6 font-semibold text-indigo-600">{order.id}</td>
+                <tr
+                  key={order.id}
+                  className="hover:bg-slate-50/80 transition-colors"
+                >
+                  <td className="py-4 px-6 font-semibold text-indigo-600">
+                    {order.id}
+                  </td>
                   <td className="py-4 px-6">
-                    <div className="font-medium text-slate-800">{order.customerName}</div>
+                    <div className="font-medium text-slate-800">
+                      {order.customerName}
+                    </div>
                     <div className="text-xs text-slate-400">{order.email}</div>
                   </td>
                   <td className="py-4 px-6 text-slate-700">{order.product}</td>
-                  <td className="py-4 px-6 font-medium text-slate-900">${order.amount.toFixed(2)}</td>
+                  <td className="py-4 px-6 font-medium text-slate-900">
+                    ${order.amount.toFixed(2)}
+                  </td>
                   <td className="py-4 px-6">
                     <select
                       value={order.status}
-                      onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(order.id, e.target.value)
+                      }
                       className="py-1 px-2.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white focus:outline-none focus:border-indigo-500"
                     >
                       <option value="Pending">Pending</option>
@@ -136,7 +152,9 @@ export default function OrdersTable() {
                       <option value="Cancelled">Cancelled</option>
                     </select>
                   </td>
-                  <td className="py-4 px-6 text-slate-500 text-xs">{order.date}</td>
+                  <td className="py-4 px-6 text-slate-500 text-xs">
+                    {order.date}
+                  </td>
                 </tr>
               ))
             )}
@@ -146,8 +164,10 @@ export default function OrdersTable() {
 
       <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
         <div>
-          Page <span className="font-semibold text-slate-800">{page}</span> of{' '}
-          <span className="font-semibold text-slate-800">{totalPages || 1}</span>
+          Page <span className="font-semibold text-slate-800">{page}</span> of{" "}
+          <span className="font-semibold text-slate-800">
+            {totalPages || 1}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <button
