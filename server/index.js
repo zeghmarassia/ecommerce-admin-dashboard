@@ -77,5 +77,41 @@ app.get('/api/orders', (req, res) => {
   });
 });
 
+// POST: Create a new order
+app.post('/api/orders', (req, res) => {
+  const { customerName, email, product, amount, status } = req.body;
+  
+  if (!customerName || !product || !amount) {
+    return res.status(400).json({ error: 'Missing required order details.' });
+  }
+
+  const newOrder = {
+    id: `ORD-${1000 + db.orders.length}`,
+    customerName,
+    email: email || `${customerName.toLowerCase().replace(/\s+/g, '')}@example.com`,
+    product,
+    amount: parseFloat(amount),
+    status: status || 'Pending',
+    date: new Date().toISOString().split('T')[0],
+  };
+
+  db.orders.unshift(newOrder); // Add to beginning of array
+  res.status(201).json(newOrder);
+});
+
+// PUT: Update order status
+app.put('/api/orders/:id', (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const orderIndex = db.orders.findIndex((o) => o.id === id);
+  if (orderIndex === -1) {
+    return res.status(404).json({ error: 'Order not found.' });
+  }
+
+  db.orders[orderIndex].status = status;
+  res.json(db.orders[orderIndex]);
+});
+
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
